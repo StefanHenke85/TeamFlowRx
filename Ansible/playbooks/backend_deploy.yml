@@ -1,0 +1,30 @@
+---
+- name: Deploy Backend Application
+  hosts: ec2
+  become: yes
+  vars:
+    docker_compose_file: "/home/ubuntu/docker-compose.yml"
+    project_directory: "/home/ubuntu"
+
+  tasks:
+    - name: Ensure Docker is installed
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Copy Docker Compose file to target
+      template:
+        src: ../templates/docker-compose.yml.j2
+        dest: "{{ docker_compose_file }}"
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+
+    - name: Start Docker containers
+      command: docker-compose up -d
+      args:
+        chdir: "{{ project_directory }}"
+
+    - name: Verify Docker containers are running
+      command: docker ps

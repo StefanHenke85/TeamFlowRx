@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  backend:
+    image: my-backend-image:latest
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST={{ db_host }}
+      - DB_USER={{ db_user }}
+      - DB_PASSWORD={{ db_password }}

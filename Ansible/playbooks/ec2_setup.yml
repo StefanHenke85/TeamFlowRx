@@ -1,0 +1,61 @@
+---
+- name: EC2 Setup and Configuration
+  hosts: ec2
+  become: yes
+  vars:
+    nodejs_version: "{{ nodejs_version }}"
+
+  tasks:
+    - name: Update all packages
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install Node.js
+      apt:
+        name: "nodejs"
+        state: present
+
+    - name: Add NodeSource repository for Node.js
+      shell: "curl -fsSL https://deb.nodesource.com/setup_{{ nodejs_version }}.x | bash -"
+      args:
+        warn: false
+
+    - name: Install prerequisites for Docker
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      apt_repository:
+        repo: "deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker-ce
+        state: present
+
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Allow SSH from specific IPs
+      ufw:
+        rule: allow
+        port: 22
+        proto: tcp
+        from_ip: "{{ item }}"
+      loop: "{{ ssh_allowed_ips }}"

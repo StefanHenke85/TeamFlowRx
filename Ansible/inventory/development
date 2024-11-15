@@ -1,0 +1,7 @@
+[ec2]
+ec2-instance-1 ansible_host=ec2-xxx.compute.amazonaws.com ansible_user=ubuntu
+ec2-instance-2 ansible_host=ec2-yyy.compute.amazonaws.com ansible_user=ubuntu
+
+[ec2:vars]
+ansible_ssh_private_key_file=~/.ssh/your-ec2-key.pem
+ssh_allowed_ips=["192.168.1.0/24", "10.0.0.0/16"]
