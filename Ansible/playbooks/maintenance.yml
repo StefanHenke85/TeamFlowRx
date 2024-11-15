@@ -1,0 +1,30 @@
+---
+- name: System Maintenance
+  hosts: ec2
+  become: yes
+
+  tasks:
+    - name: Update all packages to the latest version
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Remove unused Docker containers
+      command: docker container prune -f
+
+    - name: Remove unused Docker images
+      command: docker image prune -a -f
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Restart backend containers
+      command: docker-compose restart
+      args:
+        chdir: "/home/ubuntu"
+
+    - name: Check system uptime
+      command: uptime
