@@ -54,6 +54,6 @@ jobs:
         run: terraform apply -auto-approve tfplan
 
       # 9. Cleanup tfplan (optional)
-      - name: Cleanup tfplan file
-        if: always()
-        run: rm -f tfplan
+#      - name: Cleanup tfplan file
+#        if: always()
+#        run: rm -f tfplan
