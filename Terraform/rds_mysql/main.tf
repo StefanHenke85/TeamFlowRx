@@ -1,4 +1,4 @@
-# RDS MySQL Database Instance
+# RDS MySQL Database Instance with Multi-AZ
 resource "aws_db_instance" "mysql_db" {
   allocated_storage      = 20
   max_allocated_storage  = 100
@@ -9,11 +9,10 @@ resource "aws_db_instance" "mysql_db" {
   password               = var.db_password
   parameter_group_name   = "default.mysql8.0"
   skip_final_snapshot    = true
-  backup_retention_period = 7
-  backup_window          = "07:00-09:00"
+  multi_az               = true  # Activates Multi-AZ Deployment
 
-  # Multi-AZ deployment for high availability (optional)
-  # multi_az = true
+  backup_retention_period = 7
+  backup_window           = "07:00-09:00"
 
   vpc_security_group_ids = [aws_security_group.db_access_sg.id]
 
