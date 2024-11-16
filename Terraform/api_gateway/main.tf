@@ -1,5 +1,3 @@
-# api_gateway/main.tf
-
 # API Gateway REST API
 resource "aws_api_gateway_rest_api" "my_api" {
   name        = "${var.environment}_api"
@@ -23,29 +21,18 @@ resource "aws_api_gateway_method" "get_method" {
   rest_api_id   = aws_api_gateway_rest_api.my_api.id
   resource_id   = aws_api_gateway_resource.root.id
   http_method   = "GET"
-  authorization = "NONE"  # Optional: Use "AWS_IAM" for authorization
-
-  # Optional: Set up request parameters and headers if needed
+  authorization = "NONE" # Optional: Use "AWS_IAM" for more secure authorization
 }
 
-# Integration with Lambda
-resource "aws_api_gateway_integration" "lambda_integration" {
-  rest_api_id = aws_api_gateway_rest_api.my_api.id
-  resource_id = aws_api_gateway_resource.root.id
-  http_method = aws_api_gateway_method.get_method.http_method
-  type        = "AWS_PROXY"
-  integration_http_method = "POST"
-  uri         = aws_lambda_function.my_lambda.invoke_arn
+# Integration with EC2
+resource "aws_api_gateway_integration" "ec2_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.my_api.id
+  resource_id             = aws_api_gateway_resource.root.id
+  http_method             = aws_api_gateway_method.get_method.http_method
+  type                    = "HTTP"
+  integration_http_method = "GET"
+  uri                     = var.backend_url # URL of your EC2 or Load Balancer
 }
-
-# Optional: Integration with EC2 instead of Lambda
-# resource "aws_api_gateway_integration" "ec2_integration" {
-#   rest_api_id = aws_api_gateway_rest_api.my_api.id
-#   resource_id = aws_api_gateway_resource.root.id
-#   http_method = aws_api_gateway_method.get_method.http_method
-#   type        = "HTTP"
-#   uri         = var.ec2_endpoint  # EC2 endpoint or load balancer URL
-# }
 
 # Deploy the API Gateway
 resource "aws_api_gateway_deployment" "api_deployment" {
@@ -53,6 +40,6 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   stage_name  = var.stage_name
 
   depends_on = [
-    aws_api_gateway_integration.lambda_integration,
+    aws_api_gateway_integration.ec2_integration,
   ]
 }

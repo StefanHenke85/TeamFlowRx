@@ -1,8 +1,6 @@
 # S3 Bucket for hosting static content
 resource "aws_s3_bucket" "web_bucket" {
   bucket = var.bucket_name
-  # Remove deprecated `acl` if not necessary
-  # acl = "public-read" 
 
   versioning {
     enabled = true
@@ -64,7 +62,7 @@ resource "aws_cloudfront_distribution" "cdn" {
 
   restrictions {
     geo_restriction {
-      restriction_type = "none"  # Use "whitelist" or "blacklist" to restrict regions if needed
+      restriction_type = "none"
     }
   }
 
