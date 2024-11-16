@@ -1,132 +1,132 @@
-# TeamFlowRX - infrastrukturprojekt
+# TeamFlowRX - Infrastrukturprojekt
 
-## projektübersicht
+## Projektübersicht
 
-teamflowrx ist eine cloud-basierte infrastruktur, die auf **aws** gehostet wird und für die bereitstellung und das management von ressourcen konzipiert ist, um eine skalierbare und sichere umgebung zu gewährleisten. mit **terraform** und **ansible** automatisieren wir die bereitstellung und verwaltung der infrastruktur, während ein **ci/cd-workflow** mit **github actions** sicherstellt, dass änderungen nahtlos und zuverlässig implementiert werden.
+TeamFlowRX ist eine Cloud-basierte Infrastruktur, die auf **AWS** gehostet wird und für die Bereitstellung und das Management von Ressourcen konzipiert ist, um eine skalierbare und sichere Umgebung zu gewährleisten. Mit **Terraform** und **Ansible** automatisieren wir die Bereitstellung und Verwaltung der Infrastruktur, während ein **CI/CD-Workflow** mit **GitHub Actions** sicherstellt, dass Änderungen nahtlos und zuverlässig implementiert werden.
 
-**ziele des projekts:**
-- bereitstellung einer vollständig skalierbaren infrastruktur auf aws.
-- sicherstellung der konsistenz und wiederholbarkeit durch infrastruktur als code (iac).
-- automatisierte einrichtung und wartung der entwicklungs-, staging- und produktionsumgebungen.
+**Ziele des Projekts:**
+- Bereitstellung einer vollständig skalierbaren Infrastruktur auf AWS.
+- Sicherstellung der Konsistenz und Wiederholbarkeit durch Infrastruktur als Code (IaC).
+- Automatisierte Einrichtung und Wartung der Entwicklungs-, Staging- und Produktionsumgebungen.
 
 ---
 
-## setup- und bereitstellungsanweisungen
+## Setup- und Bereitstellungsanweisungen
 
-### voraussetzungen
+### Voraussetzungen
 
-stellen sie sicher, dass die folgenden voraussetzungen erfüllt sind:
-- **aws-konto**: für den zugriff und die verwaltung der aws-ressourcen.
-- **aws cli**: installieren und konfigurieren sie die aws cli mit den entsprechenden anmeldedaten.
-- **terraform**: installieren sie terraform ([anleitung](https://learn.hashicorp.com/tutorials/terraform/install-cli)).
-- **ansible**: installieren sie ansible ([anleitung](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)).
+Stellen Sie sicher, dass die folgenden Voraussetzungen erfüllt sind:
+- **AWS-Konto**: Für den Zugriff und die Verwaltung der AWS-Ressourcen.
+- **AWS CLI**: Installieren und konfigurieren Sie die AWS CLI mit den entsprechenden Anmeldedaten.
+- **Terraform**: Installieren Sie Terraform ([Anleitung](https://learn.hashicorp.com/tutorials/terraform/install-cli)).
+- **Ansible**: Installieren Sie Ansible ([Anleitung](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)).
 
-### 1. terraform-bereitstellung
+### 1. Terraform-Bereitstellung
 
-#### schritte zur bereitstellung
+#### Schritte zur Bereitstellung
 
-1. **aws zugangsdaten konfigurieren**:
-   - speichern sie die aws zugangsdaten (access key und secret key) in ihrer umgebung oder verwenden sie `aws configure`, um die berechtigungen festzulegen.
+1. **AWS-Zugangsdaten konfigurieren**:
+   - Speichern Sie die AWS-Zugangsdaten (Access Key und Secret Key) in Ihrer Umgebung oder verwenden Sie `aws configure`, um die Berechtigungen festzulegen.
 
-2. **terraform initialisieren und anwenden**:
-   - gehen sie in das verzeichnis, in dem sich die `main.tf` datei befindet, und führen sie die folgenden befehle aus:
+2. **Terraform initialisieren und anwenden**:
+   - Gehen Sie in das Verzeichnis, in dem sich die `main.tf`-Datei befindet, und führen Sie die folgenden Befehle aus:
      ```bash
      terraform init
      terraform apply
      ```
-   - terraform wird alle notwendigen ressourcen bereitstellen, einschließlich iam-rollen, cloudwatch-logs und -alarme, ec2-instanzenn und weiteren ressourcen, die in den modulen definiert sind.
-   - bestätigen sie die bereitstellung, indem sie `yes` eingeben, wenn terraform nach einer bestätigung fragt.
+   - Terraform wird alle notwendigen Ressourcen bereitstellen, einschließlich IAM-Rollen, CloudWatch-Logs und -Alarme, EC2-Instanzen und weiteren Ressourcen, die in den Modulen definiert sind.
+   - Bestätigen Sie die Bereitstellung, indem Sie `yes` eingeben, wenn Terraform nach einer Bestätigung fragt.
 
-3. **terraform variablen anpassen**:
-   - die umgebung kann über die `environment` variable angepasst werden (z. b. `dev`, `staging`, `prod`). dies kann durch anpassung der variablen im code oder durch angabe beim befehl geschehen:
+3. **Terraform-Variablen anpassen**:
+   - Die Umgebung kann über die `environment`-Variable angepasst werden (z. B. `dev`, `staging`, `prod`). Dies kann durch Anpassung der Variablen im Code oder durch Angabe beim Befehl geschehen:
      ```bash
      terraform apply -var="environment=prod"
      ```
 
-#### wichtige terraform-dateien
+#### Wichtige Terraform-Dateien
 
-- **`main.tf`**: orchestriert die module und definiert die hauptressourcen.
-- **`variables.tf`**: definiert die globalen variablen für das projekt.
-- **`outputs.tf`**: stellt wichtige outputs zur verfügung, wie die arns der erstellten ressourcen.
+- **`main.tf`**: Orchestriert die Module und definiert die Hauptressourcen.
+- **`variables.tf`**: Definiert die globalen Variablen für das Projekt.
+- **`outputs.tf`**: Stellt wichtige Outputs zur Verfügung, wie die ARNs der erstellten Ressourcen.
 
-### 2. ansible-playbooks
+### 2. Ansible-Playbooks
 
-#### ausführung der ansible-playbooks
+#### Ausführung der Ansible-Playbooks
 
-1. **ec2-setup playbook**:
-   - dieses playbook installiert und konfiguriert die grundlegenden softwarekomponenten auf den ec2-instanzenn, einschließlich docker, node.js und dem cloudwatch-agent.
+1. **EC2-Setup-Playbook**:
+   - Dieses Playbook installiert und konfiguriert die grundlegenden Softwarekomponenten auf den EC2-Instanzen, einschließlich Docker, Node.js und dem CloudWatch-Agent.
      ```bash
      ansible-playbook playbooks/ec2_setup.yml
      ```
 
-2. **backend-deployment playbook**:
-   - das backend-deployment-playbook stellt das backend mithilfe von docker-containern bereit und startet den container mit den korrekten umgebungsvariablen.
+2. **Backend-Deployment-Playbook**:
+   - Das Backend-Deployment-Playbook stellt das Backend mithilfe von Docker-Containern bereit und startet den Container mit den korrekten Umgebungsvariablen.
      ```bash
      ansible-playbook playbooks/backend_deploy.yml
      ```
 
-3. **wartungs-playbook**:
-   - das wartungs-playbook führt regelmäßige system-updates durch, bereinigt docker-container und prüft die systemgesundheit.
+3. **Wartungs-Playbook**:
+   - Das Wartungs-Playbook führt regelmäßige System-Updates durch, bereinigt Docker-Container und prüft die Systemgesundheit.
      ```bash
      ansible-playbook playbooks/maintenance.yml
      ```
 
-#### wichtige ansible-dateien
+#### Wichtige Ansible-Dateien
 
-- **`ec2_setup.yml`**: initiales setup für die ec2-instanzenn.
-- **`backend_deploy.yml`**: deployment des backend-containers.
-- **`maintenance.yml`**: wartung und updates für die instanzenn.
-
----
-
-## verwendung des ci/cd-workflows
-
-### github actions workflow für terraform
-
-der ci/cd-workflow ist so eingerichtet, dass er bei push-events auf den `main`-branch ausgeführt wird. der workflow automatisiert die bereitstellung der terraform-infrastruktur und stellt sicher, dass änderungen an den konfigurationsdateien automatisch angewendet werden.
-
-#### funktionsweise des workflows
-
-**workflow-trigger:**
-- der workflow wird ausgelöst, wenn änderungen an den terraform-dateien im `main`-branch vorgenommen und gepusht werden.
-
-**workflow-schritte:**
-1. **checkout repository**: der code wird aus dem github-repository in den workflow-runner geladen.
-2. **aws credentials konfigurieren**: die aws zugangsdaten werden aus den secrets abgerufen und für terraform-befehle verwendet.
-3. **terraform initialisieren**: `terraform init` wird ausgeführt, um das projekt vorzubereiten.
-4. **terraform plan**: `terraform plan` generiert einen plan der infrastrukturänderungen.
-5. **terraform apply**: `terraform apply` führt die änderungen auf den aws-ressourcen aus.
-
-#### konfiguration der github actions secrets
-
-um den workflow korrekt auszuführen, sind folgende secrets in den github repository-einstellungen erforderlich:
-- **`aws_access_key_id`**: der aws access key für die berechtigungen.
-- **`aws_secret_access_key`**: der secret access key für den aws-zugriff.
-- **`aws_region`**: die aws-region, in der die ressourcen bereitgestellt werden (z. b. `us-east-1`).
-
-#### anpassungen am workflow
-
-falls anpassungen erforderlich sind, können sie die workflow-datei `.github/workflows/terraform.yml` entsprechend bearbeiten, um zusätzliche schritte oder anpassungen für spezifische anforderungen hinzuzufügen.
+- **`ec2_setup.yml`**: Initiales Setup für die EC2-Instanzen.
+- **`backend_deploy.yml`**: Deployment des Backend-Containers.
+- **`maintenance.yml`**: Wartung und Updates für die Instanzen.
 
 ---
 
-## fehlerbehebung und support
+## Verwendung des CI/CD-Workflows
 
-falls probleme auftreten, finden sie hier einige häufige fehler und deren lösungen:
-- **fehlende aws-berechtigungen**: stellen sie sicher, dass die iam-rolle die erforderlichen berechtigungen für die aktionen in terraform und ansible hat.
-- **github actions fehler bei secrets**: prüfen sie, ob alle secrets korrekt konfiguriert sind.
-- **timeouts oder fehlgeschlagene ressourcen**: stellen sie sicher, dass die aws-region korrekt gesetzt ist und dass die ec2-instanzenn und anderen ressourcen korrekt erreichbar sind.
+### GitHub Actions Workflow für Terraform
+
+Der CI/CD-Workflow ist so eingerichtet, dass er bei Push-Events auf den `main`-Branch ausgeführt wird. Der Workflow automatisiert die Bereitstellung der Terraform-Infrastruktur und stellt sicher, dass Änderungen an den Konfigurationsdateien automatisch angewendet werden.
+
+#### Funktionsweise des Workflows
+
+**Workflow-Trigger:**
+- Der Workflow wird ausgelöst, wenn Änderungen an den Terraform-Dateien im `main`-Branch vorgenommen und gepusht werden.
+
+**Workflow-Schritte:**
+1. **Checkout Repository**: Der Code wird aus dem GitHub-Repository in den Workflow-Runner geladen.
+2. **AWS Credentials konfigurieren**: Die AWS-Zugangsdaten werden aus den Secrets abgerufen und für Terraform-Befehle verwendet.
+3. **Terraform initialisieren**: `terraform init` wird ausgeführt, um das Projekt vorzubereiten.
+4. **Terraform Plan**: `terraform plan` generiert einen Plan der Infrastrukturänderungen.
+5. **Terraform Apply**: `terraform apply` führt die Änderungen auf den AWS-Ressourcen aus.
+
+#### Konfiguration der GitHub Actions Secrets
+
+Um den Workflow korrekt auszuführen, sind folgende Secrets in den GitHub-Repository-Einstellungen erforderlich:
+- **`AWS_ACCESS_KEY_ID`**: Der AWS Access Key für die Berechtigungen.
+- **`AWS_SECRET_ACCESS_KEY`**: Der Secret Access Key für den AWS-Zugriff.
+- **`AWS_REGION`**: Die AWS-Region, in der die Ressourcen bereitgestellt werden (z. B. `us-east-1`).
+
+#### Anpassungen am Workflow
+
+Falls Anpassungen erforderlich sind, können Sie die Workflow-Datei `.github/workflows/terraform.yml` entsprechend bearbeiten, um zusätzliche Schritte oder Anpassungen für spezifische Anforderungen hinzuzufügen.
 
 ---
 
-## weitere ressourcen
+## Fehlerbehebung und Support
 
-- [terraform dokumentation](https://www.terraform.io/docs)
-- [ansible dokumentation](https://docs.ansible.com)
-- [github actions dokumentation](https://docs.github.com/actions)
+Falls Probleme auftreten, finden Sie hier einige häufige Fehler und deren Lösungen:
+- **Fehlende AWS-Berechtigungen**: Stellen Sie sicher, dass die IAM-Rolle die erforderlichen Berechtigungen für die Aktionen in Terraform und Ansible hat.
+- **GitHub Actions Fehler bei Secrets**: Prüfen Sie, ob alle Secrets korrekt konfiguriert sind.
+- **Timeouts oder fehlgeschlagene Ressourcen**: Stellen Sie sicher, dass die AWS-Region korrekt gesetzt ist und dass die EC2-Instanzen und anderen Ressourcen korrekt erreichbar sind.
 
 ---
 
-## kontakt und support
+## Weitere Ressourcen
 
-falls sie fragen haben oder unterstützung benötigen, wenden sie sich bitte an das devops-team.
+- [Terraform Dokumentation](https://www.terraform.io/docs)
+- [Ansible Dokumentation](https://docs.ansible.com)
+- [GitHub Actions Dokumentation](https://docs.github.com/actions)
+
+---
+
+## Kontakt und Support
+
+Falls Sie Fragen haben oder Unterstützung benötigen, wenden Sie sich bitte an das DevOps-Team.
