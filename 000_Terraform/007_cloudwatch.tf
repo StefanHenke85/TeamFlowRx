@@ -60,7 +60,6 @@ resource "aws_cloudwatch_metric_alarm" "disk_space_alarm" {
   }
 }
 
-
 resource "aws_cloudwatch_metric_alarm" "memory_utilization_alarm" {
   alarm_name          = "${var.environment}_memory_utilization_alarm"
   comparison_operator = "GreaterThanThreshold"
@@ -81,7 +80,6 @@ resource "aws_cloudwatch_metric_alarm" "memory_utilization_alarm" {
   }
 }
 
-
 resource "aws_cloudwatch_metric_alarm" "alb_unhealthy_targets_alarm" {
   alarm_name          = "${var.environment}_alb_unhealthy_targets_alarm"
   comparison_operator = "GreaterThanThreshold"
@@ -94,15 +92,14 @@ resource "aws_cloudwatch_metric_alarm" "alb_unhealthy_targets_alarm" {
   alarm_actions       = [aws_sns_topic.alerts.arn]
 
   dimensions = {
-    LoadBalancer = aws_lb.my_alb.arn_suffix
-    TargetGroup  = aws_lb_target_group.my_target_group.arn_suffix
+    LoadBalancer = aws_lb.app_lb.arn_suffix
+    TargetGroup  = aws_lb_target_group.app_tg.arn_suffix
   }
 
   tags = {
     Environment = var.environment
   }
 }
-
 
 resource "aws_cloudwatch_metric_alarm" "billing_alarm" {
   alarm_name          = "${var.environment}_billing_alarm"
@@ -123,7 +120,6 @@ resource "aws_cloudwatch_metric_alarm" "billing_alarm" {
     Environment = var.environment
   }
 }
-
 
 resource "aws_cloudwatch_metric_alarm" "api_latency_alarm" {
   alarm_name          = "${var.environment}_api_latency_alarm"

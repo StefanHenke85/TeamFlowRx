@@ -3,42 +3,73 @@ name: Terraform Workflow
 on:
   push:
     branches:
-      - main
+      - main  # Automatischer Workflow für Änderungen im main-Branch
+  pull_request:
+    branches:
+      - main  # Plan-Validierung für Pull Requests, ohne Änderungen anzuwenden
 
 jobs:
   terraform:
-    name: Terraform Apply
+    name: Terraform Workflow
     runs-on: ubuntu-latest
 
+    env:
+      TF_LOG: DEBUG  # Detaillierte Logs für Terraform-Schritte
+
     steps:
+      # Schritt 1: Checkout des Repositorys
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Schritt 2: Set up Terraform CLI
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
 
+      # Schritt 3: AWS-Anmeldeinformationen konfigurieren
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-1
+          aws-region: ${{ secrets.AWS_REGION }}
 
+      # Schritt 4: Validate Terraform Files
       - name: Validate Terraform files
-        run: terraform validate
-        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
+        run: terraform validate -no-color
+        working-directory: ./Terraform
 
+      # Schritt 5: Initialize Terraform
       - name: Initialize Terraform
-        run: terraform init
-        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
+        run: terraform init -no-color
+        working-directory: ./Terraform
 
+      # Schritt 6: Terraform Plan für PRs und Pushes
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
-        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
+        id: plan
+        run: terraform plan -out=tfplan -no-color
+        working-directory: ./Terraform
 
+      # Schritt 7: Terraform Plan anzeigen (optional, für Debugging)
+      - name: Show Terraform Plan
+        if: github.event_name == 'push'
+        run: terraform show tfplan -no-color
+        working-directory: ./Terraform
+
+      # Schritt 8: Terraform Apply nur für Pushes
       - name: Terraform Apply
         if: github.event_name == 'push'
-        run: terraform apply -auto-approve tfplan
-        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
+        run: terraform apply -auto-approve tfplan -no-color
+        working-directory: ./Terraform
+
+      # Schritt 9: Terraform Outputs abrufen
+      - name: Get Terraform Outputs
+        run: terraform output -no-color
+        working-directory: ./Terraform
+
+      # Schritt 10: Cleanup Plan-Datei (optional)
+      - name: Clean up Terraform plan file
+        if: github.event_name == 'push'
+        run: rm -f tfplan
+        working-directory: ./Terraform

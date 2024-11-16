@@ -1,5 +1,3 @@
-# ec2/main.tf
-
 # Security Group for EC2 instance
 resource "aws_security_group" "ec2_sg" {
   name        = "${var.environment}_ec2_sg"
@@ -17,7 +15,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = var.ssh_cidr_blocks  # SSH Zugriff nur von spezifischen IPs
+    cidr_blocks = var.ssh_cidr_blocks  # SSH access restricted to specific IPs
   }
 
   egress {

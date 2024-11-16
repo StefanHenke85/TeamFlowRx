@@ -21,7 +21,7 @@ resource "aws_api_gateway_method" "get_method" {
   rest_api_id   = aws_api_gateway_rest_api.my_api.id
   resource_id   = aws_api_gateway_resource.root.id
   http_method   = "GET"
-  authorization = "NONE" # Optional: Use "AWS_IAM" for more secure authorization
+  authorization = "NONE" # Optional: Use "AWS_IAM" for secure authorization
 }
 
 # Integration with EC2
@@ -31,7 +31,7 @@ resource "aws_api_gateway_integration" "ec2_integration" {
   http_method             = aws_api_gateway_method.get_method.http_method
   type                    = "HTTP"
   integration_http_method = "GET"
-  uri                     = var.backend_url # URL of your EC2 or Load Balancer
+  uri                     = var.backend_url # URL of the EC2 or Load Balancer
 }
 
 # Deploy the API Gateway
