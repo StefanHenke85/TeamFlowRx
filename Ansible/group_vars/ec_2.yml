@@ -2,7 +2,6 @@ nodejs_version: "14"
 ssh_allowed_ips:
   - "192.168.1.0/24"
   - "10.0.0.0/16"
-
 db_host: "my-database-instance.xxxx.amazonaws.com"
 db_user: "admin"
 db_password: "securepassword"

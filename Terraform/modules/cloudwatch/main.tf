@@ -1,3 +1,4 @@
+# Alarm für hohe CPU-Auslastung
 resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
   alarm_name          = "${var.environment}_high_cpu_alarm"
   comparison_operator = "GreaterThanThreshold"
@@ -18,6 +19,7 @@ resource "aws_cloudwatch_metric_alarm" "high_cpu_alarm" {
   }
 }
 
+# Alarm für 5XX-Fehler im API Gateway
 resource "aws_cloudwatch_metric_alarm" "api_5xx_errors_alarm" {
   alarm_name          = "${var.environment}_api_5xx_errors_alarm"
   comparison_operator = "GreaterThanThreshold"
