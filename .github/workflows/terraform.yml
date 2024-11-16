@@ -1,59 +1,44 @@
-name: Terraform CI/CD
+name: Terraform Workflow
 
 on:
   push:
-    branches:
-      - main  # Startet die Pipeline bei Änderungen im 'main'-Branch
-  pull_request:
     branches:
       - main
 
 jobs:
   terraform:
-    name: Terraform Workflow
+    name: Terraform Apply
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Repository-Checkout
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 2. Set up Terraform
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
 
-      # 3. AWS Credentials konfigurieren
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: eu-central-1
 
-      # 4. Terraform Validate
       - name: Validate Terraform files
         run: terraform validate
+        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
 
-      # 5. Lockfile generieren
-      - name: Generate Terraform lockfile
-        run: terraform providers lock -platform=linux_amd64
-
-      # 6. Terraform Initialisierung
       - name: Initialize Terraform
         run: terraform init
+        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
 
-      # 7. Terraform Plan
       - name: Terraform Plan
         run: terraform plan -out=tfplan
+        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
 
-      # 8. Terraform Apply (nur bei Push)
       - name: Terraform Apply
         if: github.event_name == 'push'
         run: terraform apply -auto-approve tfplan
-
-      # 9. Cleanup tfplan (optional)
-#      - name: Cleanup tfplan file
-#        if: always()
-#        run: rm -f tfplan
+        working-directory: ./Terraform  # Terraform-Arbeitsverzeichnis setzen
