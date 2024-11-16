@@ -1,5 +1,5 @@
 variable "bucket_name" {
-  description = "The name of the S3 bucket for static content"
+  description = "The name of the S3 bucket for hosting static content"
   type        = string
 }
 

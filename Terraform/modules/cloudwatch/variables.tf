@@ -1,22 +1,21 @@
+# cloudwatch/variables.tf
+
 variable "environment" {
-  description = "The environment for the resources (e.g., dev, staging, prod)"
+  description = "The environment (e.g., dev, staging, prod)"
   type        = string
 }
 
-variable "cpu_threshold" {
-  description = "Threshold for CPU utilization to trigger an alarm"
-  type        = number
-  default     = 80
+variable "alarm_topic_arn" {
+  description = "The ARN of the SNS topic to send alarm notifications"
+  type        = string
 }
 
-variable "api_5xx_threshold" {
-  description = "Threshold for API Gateway 5XX errors to trigger an alarm"
-  type        = number
-  default     = 1
+variable "ec2_instance_id" {
+  description = "The ID of the EC2 instance to monitor for CPU usage"
+  type        = string
 }
 
-variable "alarm_actions" {
-  description = "List of actions to perform when the alarm state changes"
-  type        = list(string)
-  default     = []
+variable "api_gateway_id" {
+  description = "The ID of the API Gateway to monitor for 5xx errors"
+  type        = string
 }

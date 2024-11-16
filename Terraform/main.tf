@@ -1,6 +1,6 @@
 # AWS Provider-Konfiguration
 provider "aws" {
-  region = "us-east-1"  # Passen Sie die Region an Ihre Bedürfnisse an
+  region = "eu-central-1"  # Passen Sie die Region an Ihre Bedürfnisse an
 }
 
 # Globale Variable für die Umgebung (z.B. dev, staging, prod)

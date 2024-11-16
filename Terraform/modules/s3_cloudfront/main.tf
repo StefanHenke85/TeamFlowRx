@@ -6,6 +6,35 @@ resource "aws_s3_bucket" "web_bucket" {
     enabled = true
   }
 
+  lifecycle_rule {
+    id      = "MoveToIA"
+    enabled = true  # Corrected: Use "enabled" instead of "status"
+
+    transition {
+      days          = 30  # Move to Standard-IA after 30 days
+      storage_class = "STANDARD_IA"
+    }
+  }
+
+  lifecycle_rule {
+    id      = "MoveToGlacier"
+    enabled = true  # Corrected: Use "enabled" instead of "status"
+
+    transition {
+      days          = 90  # Move to Glacier after 90 days
+      storage_class = "GLACIER"
+    }
+  }
+
+  lifecycle_rule {
+    id      = "ExpireAfter"
+    enabled = true  # Corrected: Use "enabled" instead of "status"
+
+    expiration {
+      days = 365  # Delete objects after 365 days
+    }
+  }
+
   tags = {
     Name        = "WebBucket"
     Environment = var.environment
