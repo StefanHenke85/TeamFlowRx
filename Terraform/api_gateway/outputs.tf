@@ -1,5 +1,3 @@
-# api_gateway/outputs.tf
-
 output "api_id" {
   description = "The ID of the API Gateway"
   value       = aws_api_gateway_rest_api.my_api.id

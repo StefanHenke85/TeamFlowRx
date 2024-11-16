@@ -1,5 +1,3 @@
-# s3_cloudfront/variables.tf
-
 variable "bucket_name" {
   description = "The name of the S3 bucket for static content"
   type        = string
