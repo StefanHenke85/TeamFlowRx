@@ -1,0 +1,79 @@
+/* General Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: url('logo1.jpg') no-repeat center center fixed; /* Bild als Hintergrund */
+    background-size: cover; /* Vollbild-Anpassung */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: #fff; /* Weißer Text für besseren Kontrast */
+}
+
+/* Content Container */
+.content-container {
+    position: relative;
+    text-align: center;
+    z-index: 1; /* Sicherstellen, dass Buttons und Text sichtbar sind */
+    top: -20vh; /* Text weiter nach oben verschoben */
+}
+
+/* Text Styling */
+h1 {
+    font-size: 1.5em; /* Schriftgröße etwas kleiner */
+    margin: 0;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* Textlesbarkeit verbessern */
+}
+
+p {
+    font-size: 1.2em;
+    margin: 5px 0;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7); /* Textlesbarkeit verbessern */
+}
+
+/* Button Container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+    margin-top: 200px; /* Buttons weiter nach unten verschieben */
+}
+
+/* Buttons */
+.button {
+    display: inline-block;
+    width: 250px; /* Kleinere Breite */
+    height: 90px; /* Kleinere Höhe */
+    line-height: 50px; /* Text vertikal zentrieren */
+    text-align: center; /* Text horizontal zentrieren */
+    background-color: rgba(255, 255, 255, 0.8); /* Transparente weiße Buttons */
+    border: none;
+    border-radius: 25px; /* Ovale Form */
+    font-size: 0.8em; /* Schriftgröße angepasst */
+    font-weight: bold;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    position: relative;
+    color: transparent; /* Text unsichtbar machen, da GIF sichtbar ist */
+}
+
+/* Button 1 (mit GIF) */
+#button1 {
+    background: url('button1.gif') center/cover no-repeat; /* GIF als Hintergrund */
+}
+
+/* Button 2 (mit GIF) */
+#button2 {
+    background: url('button2.gif') center/cover no-repeat; /* GIF als Hintergrund */
+}
+
+/* Hover Effekt */
+.button:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 1); /* Beim Hover vollständig weiß */
+}
