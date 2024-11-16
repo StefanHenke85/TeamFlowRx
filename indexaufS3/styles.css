@@ -67,9 +67,11 @@ p {
     background: url('button1.gif') center/cover no-repeat; /* GIF als Hintergrund */
 }
 
-/* Button 2 (mit GIF) */
-#button2 {
-    background: url('button2.gif') center/cover no-repeat; /* GIF als Hintergrund */
+
+
+
+#button3 {
+    background: url('Testbutton.gif') center/cover no-repeat; /* GIF als Hintergrund */
 }
 
 /* Hover Effekt */
